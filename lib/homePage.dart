@@ -10,16 +10,32 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  //TextEditingController numberController = TextEditingController();
+  int number = 0;
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    var my_style = TextStyle(
+      color: Colors.white,
+      fontSize: screenHeight * 0.03,
+      fontStyle: FontStyle.italic,
+      decoration: TextDecoration.none,
+      shadows: [
+        Shadow(
+          offset: Offset(2, 2),
+          blurRadius: 5,
+          color: Color(0xffD9EAF7),
+        ),
+      ],
+    );
 
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Color(0xff2c3334), Color(0xff6EA1A4)])),
+              colors: [Color(0xffD9D9D9), Color(0xff6EA1A4)])),
       child: Column(
         children: [
           SizedBox(
@@ -32,54 +48,11 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: screenHeight * 0.05,
           ),
-          Text(
-            "Lets Play",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: screenHeight * 0.03,
-              fontStyle: FontStyle.italic,
-              decoration: TextDecoration.none,
-              shadows: [
-                Shadow(
-                  offset: Offset(2, 2),
-                  blurRadius: 5,
-                  color: Color(0xffD9EAF7),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            "And",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: screenHeight * 0.03,
-              fontStyle: FontStyle.italic,
-              decoration: TextDecoration.none,
-              shadows: [
-                Shadow(
-                  offset: Offset(2, 2),
-                  blurRadius: 5,
-                  color: Color(0xffD9EAF7),
-                ),
-              ],
-            ),
-          ),
+          Text("Lets Play", style: my_style),
+          Text("And", style: my_style),
           Text(
             "Count",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: screenHeight * 0.03,
-              fontStyle: FontStyle.italic,
-              // fontWeight: FontWeight.w700,
-              decoration: TextDecoration.none,
-              shadows: [
-                Shadow(
-                  offset: Offset(2, 2),
-                  blurRadius: 5,
-                  color: Color(0xffD9EAF7),
-                ),
-              ],
-            ),
+            style: my_style,
           ),
           SizedBox(
             height: screenHeight * 0.15,
@@ -120,6 +93,12 @@ class _HomePageState extends State<HomePage> {
                   height: screenHeight * 0.04,
                   child: Card(
                     child: TextField(
+                        //  controller: numberController,
+                        onChanged: (val) {
+                          setState(() {
+                            number = int.parse(val);
+                          });
+                        },
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -140,9 +119,10 @@ class _HomePageState extends State<HomePage> {
                         ]),
                   ),
                 ),
+                // Text("$number_of_players"),
                 OutlinedButton(
                   onPressed: () {
-                    _dialogBuilder(context);
+                    _dialogBuilder(context, number);
                   },
                   child: Text(
                     "OK",
@@ -173,37 +153,85 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Future<void> _dialogBuilder(BuildContext context) {
-  return showDialog<void>(
+Future<void> _dialogBuilder(BuildContext context, numbercontroller) {
+  var Sr_height = MediaQuery.of(context).size.height;
+  var Sr_width = MediaQuery.of(context).size.width;
+  // int num = int.parse("numbercontroller");
+  return showDialog(
     context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Basic dialog title'),
-        content: const Text('A dialog is a type of modal window that\n'
-            'appears in front of app content to\n'
-            'provide critical information, or prompt\n'
-            'for a decision to be made.'),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
+    builder: (context) => AlertDialog(
+      title: Text(
+        'Players Name',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: SizedBox(
+        width: Sr_width * 0.6,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: numbercontroller,
+          itemBuilder: (context, index) => Container(
+            //  color: Colors.red,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Text("Player No.  ${index + 1} :  "),
+                    SizedBox(
+                      height: Sr_height * 0.05,
+                      width: Sr_width * 0.4,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xff08211A),
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xff08211A),
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: Sr_height * 0.03,
+                )
+              ],
             ),
-            child: const Text('Disable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
           ),
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
+        ),
+      ),
+      actions: <Widget>[
+        OutlinedButton(
+          onPressed: () {},
+          child: Text(
+            "Done",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
-            child: const Text('Enable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
           ),
-        ],
-      );
-    },
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Color(0xff0EC9BE),
+            fixedSize: Size(Sr_width * 0.15, Sr_width * 0.01),
+            side: BorderSide(
+              width: 3,
+              color: Color(0xff0EC9BE),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
